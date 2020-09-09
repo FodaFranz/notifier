@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const connection_schema = new mongoose.Schema({
     host: String,
     clients: [String]
