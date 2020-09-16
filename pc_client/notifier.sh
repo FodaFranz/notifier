@@ -5,6 +5,8 @@ OPERATION=$1;
 FILENAME='/etc/bash.bashrc';
 IS_ENV_PARAM_DECLARED=false;
 HOST_ID=''
+URL='http://localhost:3000'
+
 while read line; do
   if [[ $line == "export NOTIFIERID="* ]]; then
     IS_ENV_PARAM_DECLARED=true;
@@ -21,7 +23,12 @@ if [[ "$IS_ENV_PARAM_DECLARED" = false ]]; then
   echo "Generating PC-ID in $FILENAME...";
 fi
 
-if [[ $OPERATION == 'generate' ]]; then
-  HOST_ID=echo uuidgen; #dont want the \n at the back
-  echo $HOST_ID;
+echo "PC-ID: $HOST_ID";
+
+if [[ $OPERATION == 'connect' ]]; then
+  TARGET_ID=$2;
+  curl --header "Content-Type: application/json" --request POST --data '{"host_id":"'"$HOST_ID"'"}' $URL/register/connect/$TARGET_ID
+elif [ $OPERATION == 'disconnect' ]; then
+  TARGET_ID=$2;
+  curl --header "Content-Type: application/json" --request POST --data '{"host_id":"'"$HOST_ID"'"}' $URL/register/disconnect/$TARGET_ID
 fi
